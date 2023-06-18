@@ -1,0 +1,15 @@
+.tile {
+    background-color: lightgray;
+    border: 5px outset;
+}
+
+.tile-opened {
+    background-color: lightgray;
+    border: 1px solid darkgray;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(var(--columns), 50px);
+    grid-template-rows: repeat(var(--rows), 50px);
+}
