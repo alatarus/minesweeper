@@ -65,7 +65,9 @@ function updateTile(element, value, probe) {
     element.onmousedown = undefined;
 
     if (value & MINED) {
-      element.innerText = "O"
+      element.innerText = "֍"
+    } else if ((value >> 4) > 0) {
+      element.innerText = (value >> 4).toString();
     }
   }
 }
@@ -92,36 +94,92 @@ function createContainer(width, height) {
 /**
  * 
  * @param {number} index 
- * @param {Uint8Array}} array 
+ * @param {Uint8Array} array 
+ * @param {number} width 
+ * @returns 
  */
-function fillArea(index, array) {
+function pick(index, array, width) {
+  let item = array[index];
 
+  if (item & VISIBLE) {
+    return;
+  }
+
+  const adjacents = getAdjacentIndexes(index, array.length, width);
+  const minesNumber = adjacents.reduce((acc, current) => {
+    return acc += array[current] & MINED;
+  }, 0);
+
+  array[index] |= VISIBLE;
+
+  if (minesNumber > 0) {
+    array[index] |= (minesNumber << 4);
+    return;
+  }
+
+  adjacents.forEach((value) => {
+    pick(value, array, width);
+  })
 }
 
 /**
  * 
  * @param {number} index 
- * @param {Uint8Array} array 
+ * @param {number} length 
  * @param {number} width 
+ * @returns {number[]}
  */
-function getNumberOfMinesAround(index, array, width) {
-  const topLeft = index % width > 0 && index >= width ? array[index - 1 - width] : 0;
-  const top = index >= width ? array[index - width] : 0;
-  const topRight = (index + 1) % width !== 0 && index >= width ? array[index + 1 - width] : 0;
-  const right = (index + 1) % width !== 0 ? array[index + 1] : 0;
-  const bottomRight = (index + 1) % width !== 0 !== 0 && index < (array.length - width) ? array[index + 1 + width] : 0;
-  const bottom = index < (array.length - width) ? array[index + width] : 0;
-  const bottomLeft = index % width > 0 && index < (array.length - width) ? array[index - 1 + width] : 0;
-  const left = index % width > 0 ? array[index - 1] : 0;
+function getAdjacentIndexes(index, length, width) {
+  const result = new Array();
 
-  return (topLeft & MINED) + (top & MINED) + (topRight & MINED) + (right & MINED) + (bottomRight & MINED) +
-    (bottom & MINED) + (bottomLeft & MINED) + (left & MINED);
+  // top left
+  if (index % width > 0 && index >= width) {
+    result.push(index - 1 - width);
+  }
+
+  // top
+  if (index >= width) {
+    result.push(index - width);
+  }
+
+  // top right
+  if ((index + 1) % width !== 0 && index >= width) {
+    result.push(index + 1 - width);
+  }
+
+  // right
+  if ((index + 1) % width !== 0) {
+    result.push(index + 1);
+  }
+
+  // bottom right
+  if ((index + 1) % width !== 0 !== 0 && index < (length - width)) {
+    result.push(index + 1 + width);
+  }
+
+  // bottom
+  if (index < (length - width)) {
+    result.push(index + width);
+  }
+
+  // bottom left
+  if (index % width > 0 && index < (length - width)) {
+    result.push(index - 1 + width);
+  }
+
+  // left
+  if (index % width > 0) {
+    result.push(index - 1);
+  }
+
+  return result;
 }
-
 
 
 class MineSweeper {
   field;
+  widht;
+  height;
   /**
    * @type {(field: Uint8Array) => void}
    */
@@ -129,13 +187,13 @@ class MineSweeper {
 
   constructor(width, height, minesCount) {
     this.field = createField(width, height, minesCount);
+    this.widht = width;
+    this.height = height;
   }
 
   probe(index, mark) {
-    const item = this.field[index];
-
     if (!mark) {
-
+      pick(index, this.field, this.widht)
     } else {
       this.field[index] |= FLAG;
     }
@@ -148,7 +206,8 @@ function main() {
   const width = 10;
   const height = 10;
 
-  const field = createField(width, height, 10);
+  const game = new MineSweeper(width, height, 10);
+  const field = game.field
   const container = createContainer(width, height);
   /**
    * @type {HTMLDivElement[]}
@@ -162,12 +221,18 @@ function main() {
     updateTile(tile, field[i], (mark) => {
       console.log("item:", i, "marked:", mark);
 
-      console.log(getNumberOfMinesAround(i, field, width));
+      game.probe(i, mark);
     });
 
     tiles.push(tile);
     container.appendChild(tile);
   }
+
+  game.onChange = (field) => {
+    tiles.forEach((tile, i) => updateTile(tile, field[i], (mark) => {
+      game.probe(i, mark);
+    }));
+  };
 
   document.body.appendChild(container);
 }
