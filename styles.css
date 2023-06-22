@@ -6,6 +6,10 @@
 .tile-opened {
     background-color: lightgray;
     border: 1px solid darkgray;
+
+    text-align: center;
+
+    font-size: 30px;
 }
 
 .container {
