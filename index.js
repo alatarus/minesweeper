@@ -11,19 +11,17 @@ function main() {
   /**
    * @type {HTMLDivElement[]}
    */
-  const tiles = new Array();
-
-
-  for (let i = 0; i < field.length; i++) {
+  const tiles = Array.from(field, (element, i) => {
     const tile = createTile()
 
-    updateTile(tile, field[i], (mark) => {
+    updateTile(tile, element, (mark) => {
       game.probe(i, mark);
     });
 
-    tiles.push(tile);
     container.appendChild(tile);
-  }
+
+    return tile;
+  });
 
   game.onChange = (field) => {
     tiles.forEach((tile, i) => updateTile(tile, field[i], (mark) => {
