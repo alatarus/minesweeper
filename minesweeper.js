@@ -12,61 +12,59 @@ export const QUESTION = 0b0001000;
  * @returns {Uint8Array}
  */
 function createField(width, height, minesCount) {
-    const field = new Uint8Array(width * height);
-    field.fill(MINED | VISIBLE, 0, minesCount);
-  
-    return shuffle(field);
+  const field = new Uint8Array(width * height);
+  field.fill(MINED, 0, minesCount);
+
+  return shuffle(field);
+}
+
+/**
+ * @type {<T>(T[]) => T[]}
+ */
+function shuffle(array) {
+  var m = array.length, t, i;
+
+  // While there remain elements to shuffle…
+  while (m) {
+
+    // Pick a remaining element…
+    i = Math.floor(Math.random() * m--);
+
+    // And swap it with the current element.
+    t = array[m];
+    array[m] = array[i];
+    array[i] = t;
   }
-  
-  /**
-   * @type {<T>(T[]) => T[]}
-   */
-  function shuffle(array) {
-    var m = array.length, t, i;
-  
-    // While there remain elements to shuffle…
-    while (m) {
-  
-      // Pick a remaining element…
-      i = Math.floor(Math.random() * m--);
-  
-      // And swap it with the current element.
-      t = array[m];
-      array[m] = array[i];
-      array[i] = t;
-    }
-  
-    return array;
-  }
+
+  return array;
+}
 
 /**
  * 
  * @param {number} index 
- * @param {Uint8Array} array 
+ * @param {Uint8Array} field 
  * @param {number} width 
  * @returns 
  */
-function pick(index, array, width) {
-  let item = array[index];
-
-  if (item & VISIBLE) {
+function pick(index, field, width) {
+  if (field[index] & VISIBLE) {
     return;
   }
 
-  const adjacents = getAdjacentIndexes(index, array.length, width);
+  const adjacents = getAdjacentIndexes(index, field.length, width);
   const minesNumber = adjacents.reduce((acc, current) => {
-    return acc += array[current] & MINED;
+    return acc += field[current] & MINED;
   }, 0);
 
-  array[index] |= VISIBLE;
+  field[index] |= VISIBLE;
 
   if (minesNumber > 0) {
-    array[index] |= (minesNumber << 4);
+    field[index] |= (minesNumber << 4);
     return;
   }
 
   adjacents.forEach((value) => {
-    pick(value, array, width);
+    pick(value, field, width);
   })
 }
 
@@ -123,10 +121,29 @@ function getAdjacentIndexes(index, length, width) {
   return result;
 }
 
+function openAll(field, width) {
+  for (let i = 0; i < field.length; i++) {
+    if (field[i] & VISIBLE) {
+      continue;
+    }
+    
+    field[i] |= VISIBLE;
+
+    if (!(field[i] & MINED)) {
+      const adjacents = getAdjacentIndexes(i, field.length, width);
+      const minesNumber = adjacents.reduce((acc, current) => {
+        return acc += field[current] & MINED;
+      }, 0);
+    
+      field[i] |= (minesNumber << 4);
+    }
+  }
+}
+
 
 export class MineSweeper {
   field;
-  widht;
+  width;
   height;
   /**
    * @type {(field: Uint8Array) => void}
@@ -135,17 +152,28 @@ export class MineSweeper {
 
   constructor(width, height, minesCount) {
     this.field = createField(width, height, minesCount);
-    this.widht = width;
+    this.width = width;
     this.height = height;
   }
 
-  probe(index, mark) {
-    if (!mark) {
-      pick(index, this.field, this.widht)
+  stepOn(index) {
+    if (this.field[index] & MINED) {
+      openAll(this.field, this.width);
+    } else {
+      pick(index, this.field, this.width)
+    }
+
+    this.onChange?.(this.field);
+  }
+
+  mark(index) {
+    if (this.field[index] & FLAG) {
+      this.field[index] ^= FLAG | QUESTION;
+    } else if (this.field[index] & QUESTION) {
+      this.field[index] ^= QUESTION;
     } else {
       this.field[index] |= FLAG;
     }
-
     this.onChange?.(this.field);
   }
 }

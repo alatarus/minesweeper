@@ -11,12 +11,10 @@ function main() {
   /**
    * @type {HTMLDivElement[]}
    */
-  const tiles = Array.from(field, (element, i) => {
+  const tiles = Array.from(field, (value, i) => {
     const tile = createTile()
 
-    updateTile(tile, element, (mark) => {
-      game.probe(i, mark);
-    });
+    updateTile(tile, value, () => game.stepOn(i), () => game.mark(i));
 
     container.appendChild(tile);
 
@@ -24,9 +22,7 @@ function main() {
   });
 
   game.onChange = (field) => {
-    tiles.forEach((tile, i) => updateTile(tile, field[i], (mark) => {
-      game.probe(i, mark);
-    }));
+    tiles.forEach((tile, i) => updateTile(tile, field[i], () => game.stepOn(i), () => game.mark(i)));
   };
 
   document.body.appendChild(container);
