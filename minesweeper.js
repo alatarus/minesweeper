@@ -99,7 +99,7 @@ function getAdjacentIndexes(index, length, width) {
   }
 
   // bottom right
-  if ((index + 1) % width !== 0 !== 0 && index < (length - width)) {
+  if ((index + 1) % width !== 0 && index < (length - width)) {
     result.push(index + 1 + width);
   }
 
@@ -126,7 +126,7 @@ function openAll(field, width) {
     if (field[i] & VISIBLE) {
       continue;
     }
-    
+
     field[i] |= VISIBLE;
 
     if (!(field[i] & MINED)) {
