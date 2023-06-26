@@ -1,5 +1,26 @@
 import { FLAG, MINED, QUESTION, VISIBLE } from "./minesweeper.js";
 
+function getColor(num) {
+    switch (num) {
+        case 1:
+            return "blue";
+        case 2:
+            return "green";
+        case 3:
+            return "orangered";
+        case 4:
+            return "indigo";
+        case 5:
+            return "brown";
+        case 6:
+            return "cadetblue";
+        case 8:
+            return "darkgray";
+        default:
+            return "black";
+    }
+}
+
 /**
  * 
  * @returns {HTMLDivElement}
@@ -19,6 +40,7 @@ export function updateTile(element, value, stepOn, mark) {
     if (value & VISIBLE) {
         element.className = "tile-opened";
         element.onmousedown = undefined;
+        element.style = `color:${getColor(value >> 4)}`;
 
         if (value & MINED) {
             element.innerText = "☼"
