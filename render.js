@@ -39,11 +39,11 @@ export function createTile() {
 export function updateTile(element, value, stepOn, mark) {
     if (value & VISIBLE) {
         element.className = "tile-opened";
-        element.onmousedown = undefined;
+        element.onmouseup = undefined;
         element.style = `color:${getColor(value >> 4)}`;
 
         if (value & MINED) {
-            element.innerText = "☼"
+            element.innerText = "💣"
         } else if ((value >> 4) > 0) {
             element.innerText = (value >> 4).toString();
         } else {
@@ -56,7 +56,7 @@ export function updateTile(element, value, stepOn, mark) {
                 mark();
             }
         }
-        element.innerText = "F";
+        element.innerText = "🚩";
     } else {
         element.className = "tile";
         element.onmouseup = (event) => {
