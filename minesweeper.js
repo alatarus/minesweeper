@@ -53,7 +53,7 @@ function pick(index, field, width) {
 
   const adjacents = getAdjacentIndexes(index, field.length, width);
   const minesNumber = adjacents.reduce((acc, current) => {
-    return acc += field[current] & MINED;
+    return acc + (field[current] & MINED);
   }, 0);
 
   field[index] |= VISIBLE;
@@ -132,7 +132,7 @@ function openAll(field, width) {
     if (!(field[i] & MINED)) {
       const adjacents = getAdjacentIndexes(i, field.length, width);
       const minesNumber = adjacents.reduce((acc, current) => {
-        return acc += field[current] & MINED;
+        return acc + (field[current] & MINED);
       }, 0);
     
       field[i] |= (minesNumber << 4);

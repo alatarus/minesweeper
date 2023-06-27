@@ -70,6 +70,10 @@ export function updateTile(element, value, stepOn, mark) {
     }
 }
 
+export function createCounter() {
+    return document.createElement("div");
+}
+
 /**
  * 
  * @param {number} width 
