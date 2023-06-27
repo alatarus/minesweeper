@@ -29,7 +29,6 @@ function main() {
       return acc + ((value & FLAG) > 0 ? 1 : 0);
     }, 0);
     counter.innerText = (minesCount - flags).toString();
-    console.log("minesCount:", minesCount, "flags:", flags);
   };
 
   counter.innerText = minesCount.toString();
