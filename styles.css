@@ -1,6 +1,7 @@
 html {
     font-family: monospace;
     font-weight: bold;
+    font-size: 30px;
 }
 
 .tile {
@@ -13,8 +14,6 @@ html {
     border: 1px solid darkgray;
 
     text-align: center;
-
-    font-size: 30px;
 }
 
 .container {
