@@ -39,8 +39,8 @@ export function createTile() {
 export function updateTile(element, value, stepOn, mark) {
     if (value & VISIBLE) {
         element.className = "tile-opened";
-        element.onmouseup = undefined;
-        element.style = `color:${getColor(value >> 4)}`;
+        element.onmouseup = null;
+        element.style.color = getColor(value >> 4);
 
         if (value & MINED) {
             element.innerText = "💣"
