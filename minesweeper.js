@@ -143,10 +143,11 @@ function openAll(field, width) {
 
 export class MineSweeper {
   field;
+  lastStep;
   width;
   height;
   /**
-   * @type {(field: Uint8Array) => void}
+   * @type {(field: Uint8Array, lastStep: number | undefined) => void}
    */
   onChange;
 
@@ -157,13 +158,15 @@ export class MineSweeper {
   }
 
   stepOn(index) {
+    this.lastStep = index;
+
     if (this.field[index] & MINED) {
       openAll(this.field, this.width);
     } else {
       pick(index, this.field, this.width)
     }
 
-    this.onChange?.(this.field);
+    this.onChange?.(this.field, this.lastStep);
   }
 
   mark(index) {
@@ -174,6 +177,6 @@ export class MineSweeper {
     } else {
       this.field[index] |= FLAG;
     }
-    this.onChange?.(this.field);
+    this.onChange?.(this.field, this.lastStep);
   }
 }

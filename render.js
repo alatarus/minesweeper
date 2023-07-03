@@ -33,10 +33,11 @@ export function createTile() {
  * 
  * @param {HTMLDivElement} element 
  * @param {number} value 
+ * @param {boolean} lastStep 
  * @param {() => void} stepOn 
  * @param {() => void} mark 
  */
-export function updateTile(element, value, stepOn, mark) {
+export function updateTile(element, value, lastStep, stepOn, mark) {
     if (value & VISIBLE) {
         element.className = "tile-opened";
         element.onmouseup = null;
@@ -44,6 +45,10 @@ export function updateTile(element, value, stepOn, mark) {
 
         if (value & MINED) {
             element.innerText = "💣"
+
+            if (lastStep) {
+                element.classList.add("tile-dead");
+            }
         } else if ((value >> 4) > 0) {
             element.innerText = (value >> 4).toString();
         } else {

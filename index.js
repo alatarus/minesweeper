@@ -7,7 +7,7 @@ function main() {
   const minesCount = 40;
 
   const game = new MineSweeper(width, height, minesCount);
-  const field = game.field
+  const field = game.field;
   const container = createContainer(width, height);
   const counter = createCounter();
   /**
@@ -16,15 +16,15 @@ function main() {
   const tiles = Array.from(field, (value, i) => {
     const tile = createTile();
 
-    updateTile(tile, value, () => game.stepOn(i), () => game.mark(i));
+    updateTile(tile, value, false, () => game.stepOn(i), () => game.mark(i));
 
     container.appendChild(tile);
 
     return tile;
   });
 
-  game.onChange = (field) => {
-    tiles.forEach((tile, i) => updateTile(tile, field[i], () => game.stepOn(i), () => game.mark(i)));
+  game.onChange = (field, lastStep) => {
+    tiles.forEach((tile, i) => updateTile(tile, field[i], i === lastStep, () => game.stepOn(i), () => game.mark(i)));
     const flags = field.reduce((acc, value) => {
       return acc + ((value & FLAG) > 0 ? 1 : 0);
     }, 0);
