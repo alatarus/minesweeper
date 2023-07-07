@@ -16,8 +16,19 @@ html {
     text-align: center;
 }
 
-.tile-dead {
+.tile-exploded {
     background-color: crimson;
+}
+
+.tile-wrong {
+    position: relative;
+}
+
+.tile-wrong::after {
+    content: "❌";
+    position: absolute;
+    top: 2px;
+    left: 2px;
 }
 
 .container {

@@ -44,11 +44,14 @@ export function updateTile(element, value, lastStep, stepOn, mark) {
         element.style.color = getColor(value >> 4);
 
         if (value & MINED) {
-            element.innerText = "💣"
+            element.innerText = lastStep ? "💥" : "💣"
 
             if (lastStep) {
-                element.classList.add("tile-dead");
+                element.classList.add("tile-exploded");
             }
+        } else if (value & FLAG) {
+            element.classList.add("tile-wrong");
+            element.innerText = "💣";
         } else if ((value >> 4) > 0) {
             element.innerText = (value >> 4).toString();
         } else {
