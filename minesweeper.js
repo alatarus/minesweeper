@@ -47,7 +47,7 @@ function shuffle(array) {
  * @returns 
  */
 function pick(index, field, width) {
-  if (field[index] & VISIBLE) {
+  if ((field[index] & VISIBLE) || (field[index] & FLAG)) {
     return;
   }
 
