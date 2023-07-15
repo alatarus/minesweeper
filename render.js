@@ -44,18 +44,18 @@ export function updateTile(element, value, lastStep, stepOn, mark) {
         element.style.color = getColor(value >> 4);
 
         if (value & MINED) {
-            element.innerText = lastStep ? "💥" : "💣"
+            element.textContent = lastStep ? "💥" : "💣"
 
             if (lastStep) {
                 element.classList.add("tile-exploded");
             }
         } else if (value & FLAG) {
             element.classList.add("tile-wrong");
-            element.innerText = "💣";
+            element.textContent = "💣";
         } else if ((value >> 4) > 0) {
-            element.innerText = (value >> 4).toString();
+            element.textContent = (value >> 4).toString();
         } else {
-            element.innerText = "";
+            element.textContent = null;
         }
     } else if (value & FLAG) {
         element.className = "tile";
@@ -64,7 +64,7 @@ export function updateTile(element, value, lastStep, stepOn, mark) {
                 mark();
             }
         }
-        element.innerText = "🚩";
+        element.textContent = "🚩";
     } else {
         element.className = "tile";
         element.onmouseup = (event) => {
@@ -74,12 +74,12 @@ export function updateTile(element, value, lastStep, stepOn, mark) {
                 mark();
             }
         }
-        element.innerText = value & QUESTION ? "?" : "";
+        element.textContent = value & QUESTION ? "?" : "";
     }
 }
 
 export function createCounter() {
-    return document.createElement("div");
+    return document.createElement("span");
 }
 
 /**
@@ -99,4 +99,31 @@ export function createContainer(width, height) {
     container.oncontextmenu = (event) => event.preventDefault();
 
     return container;
+}
+
+export function createActionSelector() {
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.className = "actionSelector";
+
+    return checkbox;
+}
+
+/**
+ * 
+ * @param {string} text 
+ * @returns
+ */
+export function createLabel(text) {
+    const label = document.createElement("label");
+    label.textContent = text;
+
+    return label;
+}
+
+export function createHeader() {
+    const header = document.createElement("div");
+    header.className = "header";
+
+    return header;
 }

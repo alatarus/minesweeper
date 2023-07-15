@@ -31,6 +31,32 @@ html {
     left: 2px;
 }
 
+input[type="checkbox"].actionSelector {
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: lightgray;
+    margin: 0;
+    border: 5px outset;
+    font: inherit;
+    color: currentColor;
+    border-radius: 0.15em;
+}
+
+input[type="checkbox"].actionSelector::before {
+    content: "💣";
+    background-color: lightgray;
+}
+
+input[type="checkbox"]:checked.actionSelector::before {
+    content: "🚩";
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .container {
     display: grid;
     grid-template-columns: repeat(var(--columns), 50px);
