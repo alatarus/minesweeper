@@ -4,6 +4,12 @@ html {
     font-size: 30px;
 }
 
+html, body {
+    margin: 0;
+    height: 100%;
+    width: 100%;
+}
+
 .tile {
     background-color: lightgray;
     border: 5px outset;

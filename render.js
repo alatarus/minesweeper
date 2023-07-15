@@ -34,10 +34,9 @@ export function createTile() {
  * @param {HTMLDivElement} element 
  * @param {number} value 
  * @param {boolean} lastStep 
- * @param {() => void} stepOn 
- * @param {() => void} mark 
+ * @param {(event: MouseEvent) => void} callback 
  */
-export function updateTile(element, value, lastStep, stepOn, mark) {
+export function updateTile(element, value, lastStep, callback) {
     if (value & VISIBLE) {
         element.className = "tile-opened";
         element.onmouseup = null;
@@ -59,27 +58,13 @@ export function updateTile(element, value, lastStep, stepOn, mark) {
         }
     } else if (value & FLAG) {
         element.className = "tile";
-        element.onmouseup = (event) => {
-            if (event.button === 2) {
-                mark();
-            }
-        }
+        element.onmouseup = callback;
         element.textContent = "🚩";
     } else {
         element.className = "tile";
-        element.onmouseup = (event) => {
-            if (event.button === 0) {
-                stepOn();
-            } else if (event.button === 2) {
-                mark();
-            }
-        }
+        element.onmouseup = callback;
         element.textContent = value & QUESTION ? "?" : "";
     }
-}
-
-export function createCounter() {
-    return document.createElement("span");
 }
 
 /**
@@ -99,31 +84,4 @@ export function createContainer(width, height) {
     container.oncontextmenu = (event) => event.preventDefault();
 
     return container;
-}
-
-export function createActionSelector() {
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.className = "actionSelector";
-
-    return checkbox;
-}
-
-/**
- * 
- * @param {string} text 
- * @returns
- */
-export function createLabel(text) {
-    const label = document.createElement("label");
-    label.textContent = text;
-
-    return label;
-}
-
-export function createHeader() {
-    const header = document.createElement("div");
-    header.className = "header";
-
-    return header;
 }
