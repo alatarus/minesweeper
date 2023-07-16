@@ -12,8 +12,15 @@
 <body>
     <div class="layout">
         <div class="header">
-            <label>mines<span id="counter" class="counter"></span></label>
-            <label>action<input id="actionSelector" type="checkbox" class="actionSelector"></label>
+            <div class="label">mines<span id="counter" class="counter"></span></div>
+            <div class="label">level
+                <div class="buttonbar">
+                    <button id="beginner">🤓</button>
+                    <button id="intermidiate">🤔</button>
+                    <button id="expert">😎</button>
+                </div>
+            </div>
+            <label class="label">action<input id="actionSelector" type="checkbox" class="actionSelector"></label>
         </div>
         <div class="scrollArea">
             <div id="placeholder"></div>
