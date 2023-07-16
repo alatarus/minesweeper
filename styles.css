@@ -76,6 +76,9 @@ input[type="checkbox"]:checked.actionSelector::before {
 }
 
 .layout {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
     display: grid;
     grid-template-rows: auto 1fr;
     grid-gap: 10px;
